@@ -1,0 +1,60 @@
+/**
+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
+ * @cliArgs --device "MSPM0L130X" --package "VQFN-32(RHB)" --part "Default" --product "mspm0_sdk@2.01.00.03"
+ * @versions {"tool":"1.20.0+3587"}
+ */
+
+/**
+ * Import the modules used in this configuration.
+ */
+const Board         = scripting.addModule("/ti/driverlib/Board");
+const GPIO          = scripting.addModule("/ti/driverlib/GPIO", {}, false);
+const GPIO1         = GPIO.addInstance();
+const SYSCTL        = scripting.addModule("/ti/driverlib/SYSCTL");
+const SYSTICK       = scripting.addModule("/ti/driverlib/SYSTICK");
+const ProjectConfig = scripting.addModule("/ti/project_config/ProjectConfig");
+
+/**
+ * Write custom configuration values to the imported modules.
+ */
+const gate6  = system.clockTree["MFCLKGATE"];
+gate6.enable = true;
+
+
+GPIO1.$name                              = "OLED_I2C";
+GPIO1.associatedPins.create(3);
+GPIO1.associatedPins[0].initialValue     = "SET";
+GPIO1.associatedPins[0].$name            = "SDA";
+GPIO1.associatedPins[0].internalResistor = "PULL_UP";
+GPIO1.associatedPins[0].ioStructure      = "SD";
+GPIO1.associatedPins[0].assignedPin      = "15";
+GPIO1.associatedPins[1].assignedPort     = "PORTA";
+GPIO1.associatedPins[1].$name            = "SCL";
+GPIO1.associatedPins[1].initialValue     = "SET";
+GPIO1.associatedPins[1].internalResistor = "PULL_UP";
+GPIO1.associatedPins[1].ioStructure      = "SD";
+GPIO1.associatedPins[1].assignedPin      = "14";
+GPIO1.associatedPins[2].ioStructure      = "SD";
+GPIO1.associatedPins[2].$name            = "GND";
+GPIO1.associatedPins[2].assignedPin      = "13";
+
+SYSCTL.clockTreeEn = true;
+
+SYSTICK.periodEnable      = true;
+SYSTICK.interruptEnable   = true;
+SYSTICK.systickEnable     = true;
+SYSTICK.interruptPriority = "0";
+SYSTICK.period            = 32000;
+
+/**
+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
+ * re-solve from scratch.
+ */
+Board.peripheral.$suggestSolution            = "DEBUGSS";
+Board.peripheral.swclkPin.$suggestSolution   = "PA20";
+Board.peripheral.swdioPin.$suggestSolution   = "PA19";
+GPIO1.associatedPins[0].pin.$suggestSolution = "PA15";
+GPIO1.associatedPins[1].pin.$suggestSolution = "PA14";
+GPIO1.associatedPins[2].pin.$suggestSolution = "PA13";
